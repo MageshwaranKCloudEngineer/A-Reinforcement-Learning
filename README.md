@@ -97,29 +97,6 @@ Generate figures:
 
 ---
 
-## 📚 Citation
-
-If you use this repository, please cite:
-
-```bibtex
-@misc{kubernetes2025docs,
-  title        = {Kubernetes Documentation},
-  author       = {{The Kubernetes Authors}},
-  year         = {2025},
-  publisher    = {The Linux Foundation},
-  url          = {https://kubernetes.io/docs/},
-  note         = {Accessed: 2025-08-09}
-}
-
-@misc{google2011clusterdata,
-  title        = {Google Cluster Data},
-  author       = {Reiss, Charles and Tumanov, Alexey and Ganger, Gregory R and Katz, Randy H and Kozuch, Michael A},
-  year         = {2011},
-  publisher    = {Google},
-  url          = {https://github.com/google/cluster-data},
-  note         = {Accessed: 2025-08-09}
-}
-```
 
 
 ## 🔍 Transparency & Reproducibility
