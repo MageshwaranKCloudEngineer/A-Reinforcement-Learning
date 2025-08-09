@@ -1,94 +1,105 @@
 # A-Reinforcement-Learning-Approach-to-Real-Time-Cost-Aware-Kubernetes-Auto-Scaling
 Implementation of an SLA-aware Kubernetes autoscaler using reinforcement learning, including the simulation environment, training scripts, evaluation notebooks, and all artefacts required to reproduce the results reported in the MSc thesis
 
----
 
 ```markdown
-# SLA-Aware Kubernetes Autoscaler using Reinforcement Learning
+# SLA-Aware Kubernetes Autoscaling using Reinforcement Learning
 
-**Implementation of an SLA-aware Kubernetes autoscaler using reinforcement learning, including the simulation environment, training scripts, evaluation notebooks, and all artefacts required to reproduce the results reported in the MSc thesis.**
+An MSc research project implementing a reinforcement learning–based Kubernetes pod autoscaler to optimize **Service Level Agreement (SLA) compliance** while reducing resource cost.  
+The project integrates:
+- A custom environment for Kubernetes scaling decisions
+- Live metrics from Prometheus
+- A DQN-based agent trained via `keras-rl`
+- Comparisons against Kubernetes HPA and VPA
 
 ---
 
-##  Repository Structure
+## 📂 Repository Structure
 
-```
 
-├── ML.ipynb                        # Core Jupyter notebook: environment setup, training, evaluation
-├── README.md                       # This file
-├── autoscaler\_decision\_snapshot.png
-├── dqn\_kube\_weights.h5            # Saved DQN model weights
-├── dqn\_reward\_accuracy\_log.csv    # Step-level training logs: reward & SLA accuracy
-├── hpa\_vpa\_rl\_simulation.csv      # Baseline vs RL simulation data
-├── kind-config.yaml               # Config for local K8s using kind
-├── latency.png                    # Latency time-series plot
-├── pd.png                         # Possibly pod-decision-related plot
-├── prometheus-values.yaml         # Helm values for Prometheus setup
-├── reward\_plot.png                # Aggregate reward plot
-├── training\_reward\_plot.png       # Training reward over episodes
-├── rl-testing-deployment.yaml     # K8s manifest for the RL agent deployment
-├── rl-testing-service.yaml        # K8s service for the RL agent
-├── run\_rl\_benchmark.sh            # Shell script to execute RL vs baseline experiments
-├── synthetic\_load\_profile\_60\_chunks.csv  # Workload trace data
-├── nginx-deploy.yaml              # Test microservice deployment manifest
-└── workload\_steady.yaml           # Descriptor for steady-state load profile
+
+├── ML.ipynb                         # End-to-end notebook: setup, training, evaluation
+├── README.md                        # This file
+├── autoscaler\_decision\_snapshot.png # Snapshot of autoscaler decision flow
+├── dqn\_kube\_weights.h5               # Saved DQN model weights
+├── dqn\_reward\_accuracy\_log.csv       # Step-level reward & SLA accuracy logs
+├── hpa\_vpa\_rl\_simulation.csv         # Baseline vs RL simulation data
+├── kind-config.yaml                  # kind cluster configuration
+├── latency.png                       # Latency time-series plot
+├── pd.png                            # Pod decision trends plot
+├── prometheus-values.yaml            # Helm values for Prometheus setup
+├── reward\_plot.png                   # Aggregate reward plot
+├── training\_reward\_plot.png          # Reward during training
+├── rl-testing-deployment.yaml        # RL agent Kubernetes deployment
+├── rl-testing-service.yaml           # RL agent Kubernetes service
+├── run\_rl\_benchmark.sh               # Benchmark script for RL vs baselines
+├── synthetic\_load\_profile\_60\_chunks.csv # Synthetic workload trace
+├── nginx-deploy.yaml                 # Test microservice deployment
+└── workload\_steady.yaml              # Steady-state load profile descriptor
 
 ````
 
 ---
 
-##  Quickstart Guide
+## 🚀 Quickstart
 
-### Prerequisites
-- Python 3.x with required packages (see below)
-- `kind` Kubernetes cluster or similar local cluster
-- Prometheus for metrics collection
+### 1. Prerequisites
+- Python 3.8+ and `pip`
+- Local Kubernetes cluster (e.g., kind, Minikube)
+- Prometheus installed in the cluster
 
-### Setup
+### 2. Setup
 ```bash
-# Prepare Kubernetes environment
+# Create Kubernetes cluster
 kind create cluster --config kind-config.yaml
-kubectl apply -f prometheus-values.yaml  # or via Helm chart for Prometheus
 
-# Deploy test services and RL agent
+# Deploy Prometheus (Helm or manifests)
+kubectl apply -f prometheus-values.yaml
+
+# Deploy test service and RL agent
 kubectl apply -f nginx-deploy.yaml
 kubectl apply -f rl-testing-deployment.yaml
 kubectl apply -f rl-testing-service.yaml
 ````
 
-### Run Benchmark
+### 3. Run Experiments
 
 ```bash
 bash run_rl_benchmark.sh
 ```
 
-This executes RL experiments and baselines, generating logs and performance CSVs.
+This script runs the RL-based autoscaler and collects comparison data for HPA/VPA.
 
-### Analyze Results
+### 4. Analyse Results
 
-Run the Jupyter notebook:
+Open the Jupyter notebook:
 
 ```bash
 jupyter notebook ML.ipynb
 ```
 
-It contains end-to-end implementation: environment, DQN training, evaluation, and plots (e.g., latency, reward, pod decision trends).
+Generate figures:
+
+* `latency.png` – latency trend vs. SLA
+* `pd.png` – pod scaling decisions over time
+* `reward_plot.png` – aggregated reward
+* `training_reward_plot.png` – training reward progression
 
 ---
 
-## Key Features
+## 📊 Key Features
 
-* **Gym-style Kubernetes environment** for autoscaling with Prometheus metrics.
-* **DQN-based autoscaler** with step-level logging of reward and SLA accuracy.
-* **Baseline comparisons**: Kubernetes HPA and VPA (if enabled).
-* **Plots and logs** to support transparency: reward trajectories, latency trends, pod scaling behavior.
-* **Reproducible workflow**: uses `run_rl_benchmark.sh` and fixed synthetic workload trace.
+* **Live Prometheus metrics**: CPU, memory, latency, pod count
+* **DQN agent**: SLA-aware reward function penalising latency breaches and excess replicas
+* **Baselines**: HPA and VPA under the same workloads
+* **Synthetic workloads** for reproducibility
+* **Saved weights & logs** for transparency
 
 ---
 
-## Citation & License
+## 📚 Citation
 
-A reference to include in academic outputs:
+If you use this repository, please cite:
 
 ```bibtex
 @misc{kubernetes2025docs,
@@ -99,6 +110,7 @@ A reference to include in academic outputs:
   url          = {https://kubernetes.io/docs/},
   note         = {Accessed: 2025-08-09}
 }
+
 @misc{google2011clusterdata,
   title        = {Google Cluster Data},
   author       = {Reiss, Charles and Tumanov, Alexey and Ganger, Gregory R and Katz, Randy H and Kozuch, Michael A},
@@ -110,5 +122,10 @@ A reference to include in academic outputs:
 ```
 
 
-Feel free to let me know if you'd like a QR link or a LaTeX snippet for embedding this repo into your report!
+## 🔍 Transparency & Reproducibility
 
+* Includes all code, configuration, workloads, and results to reproduce MSc thesis figures and tables
+* Saved RL model weights (`dqn_kube_weights.h5`) and logs (`dqn_reward_accuracy_log.csv`)
+* Workload traces for consistent evaluation
+
+```
