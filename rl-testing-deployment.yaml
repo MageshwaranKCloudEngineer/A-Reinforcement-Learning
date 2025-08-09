@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rl-testing-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rl-testing-app
+  template:
+    metadata:
+      labels:
+        app: rl-testing-app
+    spec:
+      containers:
+      - name: rl-container
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+

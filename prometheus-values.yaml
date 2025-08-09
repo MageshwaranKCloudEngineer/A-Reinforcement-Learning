@@ -1,0 +1,10 @@
+server:
+  service:
+    type: NodePort
+    nodePort: 30090
+prometheusSpec:
+  scrapeInterval: 15s
+  additionalScrapeConfigs:
+    - job_name: 'nginx'
+      static_configs:
+        - targets: ['nginx-service.default.svc.cluster.local:80']
